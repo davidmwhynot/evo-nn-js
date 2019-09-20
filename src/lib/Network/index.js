@@ -1,7 +1,4 @@
 const Layer = require('./Layer');
-const Node = require('./Node');
-const Connection = require('./Connection');
-const Matrix = require('./Matrix');
 
 class Network {
 	constructor({ layers, learningRate }) {
@@ -23,28 +20,6 @@ class Network {
 				this.Layers[i].setBiases(biases[i - 1]);
 			}
 		}
-	}
-
-	feedForward(inputArray) {
-		let inputs = Matrix.fromArray(inputArray);
-		for (let i = 1; i < this.Layers.length; ++i) {
-			const weights = new Matrix(
-				this.Layers[i].Nodes.length,
-				this.Layers[i - 1].Nodes.length
-			);
-			weights.data = this.Layers[i].getWeights();
-
-			const biases = new Matrix(this.Layers[i].Nodes.length);
-			biases.data = this.Layers[i].getBiases();
-
-			console.time('cpu');
-			// calculate values
-			inputs = Matrix.multiply(weights, inputs);
-			inputs.add(biases);
-			inputs.map(sigmoid);
-			console.timeEnd('cpu');
-		}
-		return inputs.toArray();
 	}
 
 	setWeights(weights) {
@@ -102,12 +77,18 @@ class Network {
 
 		return output;
 	}
+
+	inspect() {
+		for (const layer of this.Layers) {
+			for (const node of layer.Nodes) {
+				console.log('node\tval: ' + node.value + ' bias: ' + node.bias);
+				for (const connection of node.Connections) {
+					console.log('\t', connection.weight);
+				}
+				console.log();
+			}
+		}
+	}
 }
 
-module.exports = {
-	Layer,
-	Node,
-	Connection,
-	Network,
-	Matrix
-};
+module.exports = Network;
