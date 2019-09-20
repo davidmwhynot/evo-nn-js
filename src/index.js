@@ -10,7 +10,7 @@ const xor = async ({
 	numChildNetworks
 }) => {
 	const network = new EvolutionalNetwork({
-		layers: [{ numNodes: 2 }, { numNodes: 2 }, { numNodes: 1 }],
+		layers: [{ numNodes: 2 }, { numNodes: 256 }, { numNodes: 1 }],
 		learningRate,
 		numChildNetworks
 	});
@@ -59,11 +59,11 @@ const xor = async ({
 
 const main = async () => {
 	xor({
-		learningRate: 5,
-		numChildNetworks: 256,
-		trainingSamples: 4,
+		learningRate: 4,
+		numChildNetworks: 512,
+		trainingSamples: 1000,
 		epochs: 10,
-		batchSize: 4
+		batchSize: 100
 	});
 };
 
