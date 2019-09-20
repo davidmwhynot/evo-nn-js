@@ -19,12 +19,12 @@ class EvolutionalNetwork extends Network {
 			const batches = Math.floor(samples.length / batchSize);
 
 			for (let i = 0; i < batches; ++i) {
+				process.stdout.write('.');
 				const batch = [];
 
 				for (let j = 0; j < batchSize; ++j) {
 					batch.push(samples[j + i * batchSize]);
 				}
-				process.stdout.write(batch.length + ' ');
 
 				await this.runBatch(batch);
 			}
@@ -97,7 +97,8 @@ class EvolutionalNetwork extends Network {
 				for (const connection of node.Connections) {
 					// let before = connection.weight;
 					connection.weight =
-						connection.weight * (Math.random() * this.learningRate);
+						connection.weight * ((Math.random() - 0.5) * this.learningRate) +
+						(Math.random() - 0.5) * this.learningRate;
 					// console.log(before - connection.weight);
 					// console.log();
 				}
@@ -107,7 +108,9 @@ class EvolutionalNetwork extends Network {
 		// adjust biases randomly
 		for (const layer of network.Layers) {
 			for (const node of layer.Nodes) {
-				node.bias = node.bias * (Math.random() * (this.learningRate / 10));
+				node.bias =
+					node.bias * ((Math.random() - 0.5) * this.learningRate) +
+					(Math.random() - 0.5) * this.learningRate;
 			}
 		}
 	}
